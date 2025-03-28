@@ -1,0 +1,23 @@
+.sidebar {
+    background-color: cornflowerblue;
+    padding: 8px;
+    
+    .menu {
+        /* border: 1px solid black; */
+        color: black;
+
+        .sub-menu-title {
+            padding-left: 10%;
+        }
+    }
+
+    .menu-active {
+        .menu-title {
+            color: white;
+        }
+    }
+
+    .option-active {
+        color: white;
+    }
+}
