@@ -1,97 +1,27 @@
 import "./Sidebar.css";
-import { useState } from "react";
-// import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom'
-
-const defaultSideBarMenu = [
-  {
-    id: "expenses",
-    title: "Expenses",
-    isActive: true,
-    options: [
-      {
-        id: "list",
-        title: "All Expenses",
-        isActive: true,
-      },
-      {
-        id: "add",
-        title: "Add Expense",
-        isActive: false,
-      },
-    ],
-  },
-  {
-    id: "categories",
-    title: "Categories",
-    isActive: false,
-    options: [
-      {
-        id: "list",
-        title: "All Categories",
-        isActive: false,
-      },
-      {
-        id: "add",
-        title: "Add Category",
-        isActive: false,
-      },
-    ],
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toggleMenu, selectSubMenu } from "./sidebarSlice";
+import { useEffect } from "react";
 
 function Sidebar() {
-  const [sidebarMenu, onMenuSelection] = useState(defaultSideBarMenu);
-  const navigateTo = useNavigate();
+  const sidebarMenu = useSelector((store) => store.sidebar);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  function selectMainMenu(selectedMenu) {
-    onMenuSelection((prevMenu) =>
-      prevMenu.map((menu) => {
-        if (menu.id === selectedMenu.id) {
-          if (!menu.isActive) {
-            navigateTo(`${menu.id}/${menu.options[0].id}`)
-            return {
-              ...menu,
-              isActive: true,
-              options: menu.options.map((option, idx) => ({
-                ...option,
-                isActive: idx === 0,
-              })),
-            };
-          }
-          return menu;
-        } else {
-          return {
-            ...menu,
-            isActive: false,
-            options: menu.options.map((option, idx) => ({
-              ...option,
-              isActive: false,
-            })),
-          };
-        }
-      })
-    );
-    console.log(sidebarMenu);
-  }
+  useEffect(() => {
+    const activeRoute = location.pathname.split("/");
+    navigatePage({
+      selectedMenu: { id: activeRoute[1] },
+      selectedOption: { id: activeRoute[2] },
+    });
+  }, []);
 
-  function selectSubMenu(selectedMenu, selectedOption) {
-    onMenuSelection((prevMenu) =>
-      prevMenu.map((menu) => {
-        return {
-          ...menu,
-          options: menu.options.map((option) => {
-            return {
-              ...option,
-              isActive: option.id === selectedOption.id,
-            };
-          }),
-        };
-      })
-    );
-    navigateTo(`${selectedMenu.id}/${selectedOption.id}`);
-    console.log(sidebarMenu);
-  }
+  const navigatePage = ({ selectedMenu, selectedOption }) => {
+    dispatch(selectSubMenu({ selectedMenu, selectedOption }));
+    navigate(`/${selectedMenu.id}/${selectedOption.id}`);
+  };
 
   return (
     <div className="sidebar">
@@ -103,14 +33,15 @@ function Sidebar() {
           >
             <p
               className="menu-title clickable"
-              onClick={(e) => selectMainMenu(menu)}
+              onClick={() => dispatch(toggleMenu({ selectedMenu: menu }))}
             >
               {menu.title}
             </p>
-            {menu.isActive &&
+            {menu.toggle &&
               menu.options.map((option) => {
                 return (
                   <div
+                    id={option.id}
                     className={
                       option.isActive ? "option option-active" : "option"
                     }
@@ -118,7 +49,12 @@ function Sidebar() {
                     <p
                       id={`${menu.id}-${option.id}`}
                       className="sub-menu-title clickable"
-                      onClick={(e) => selectSubMenu(menu, option)}
+                      onClick={() =>
+                        navigatePage({
+                          selectedMenu: menu,
+                          selectedOption: option,
+                        })
+                      }
                     >
                       {option.title}
                     </p>

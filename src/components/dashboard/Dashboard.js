@@ -1,6 +1,6 @@
 import './Dashboard.css';
 import Sidebar from './sidebar/Sidebar'
-import { Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Expenses from '../expenses/Expenses'
 import Categories from '../categories/Categories'
 function Dashboard() {
@@ -10,13 +10,10 @@ function Dashboard() {
             <Sidebar />
         </div>
         <div className="content">
-            {/* <Router> */}
-              <Routes>
-                <Route path="expenses/*" element={<Expenses/>}></Route>
-                <Route path="categories/*" element={<Categories/>}></Route>
-                {/* <Route path="*" element={<Expenses/>}></Route> */}
-              </Routes>
-            {/* </Router> */}
+          <Routes>
+            <Route path="expenses/*" element={<Expenses/>}></Route>
+            <Route path="categories/*" element={<Categories/>}></Route>
+          </Routes>
         </div>
     </div>
   );
