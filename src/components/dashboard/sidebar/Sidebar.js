@@ -41,13 +41,12 @@ function Sidebar() {
               menu.options.map((option) => {
                 return (
                   <div
-                    id={option.id}
+                    id={`${menu.id}-${option.id}`}
                     className={
                       option.isActive ? "option option-active" : "option"
                     }
                   >
                     <p
-                      id={`${menu.id}-${option.id}`}
                       className="sub-menu-title clickable"
                       onClick={() =>
                         navigatePage({

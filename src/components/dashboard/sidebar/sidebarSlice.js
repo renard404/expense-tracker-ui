@@ -37,6 +37,24 @@ const defaultSidebar = [
       },
     ],
   },
+  {
+    id: "portfolio",
+    title: "Portfolios",
+    isActive: false,
+    toggle: false,
+    options: [
+      {
+        id: "list",
+        title: "All Portfolios",
+        isActive: false,
+      },
+      {
+        id: "add",
+        title: "Add Portfolio",
+        isActive: false,
+      },
+    ],
+  },
 ];
 
 const toggleMenuFn = (state, action) => {
