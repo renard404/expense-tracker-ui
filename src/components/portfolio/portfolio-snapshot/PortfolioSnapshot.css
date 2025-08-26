@@ -1,0 +1,17 @@
+.protfolio-snapshot {
+  display: flex;
+}
+.investments-list {
+  max-height: 45vh;
+  overflow: auto;
+  .investment {
+    display: grid;
+    grid-template-columns: 20% 20% 25% 26%;
+    column-gap: 3%;
+  }
+}
+.portfolio-piechart {
+  left: 25%;
+  margin-top: 40px;
+  padding: 20px;
+}
