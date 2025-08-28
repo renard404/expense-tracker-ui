@@ -38,7 +38,7 @@ const convertChartData = (portfolios) => {
   const chartData = Object.values(dateMapper);
   const latestPortfolio = dateMapper[date];
   assets = Array.from(assets).sort(
-    (a, b) => latestPortfolio[a] - latestPortfolio[b]
+    (a, b) => latestPortfolio[b] - latestPortfolio[a]
   );
   return { chartData, assets };
 };
@@ -69,11 +69,11 @@ function PortfolioStats() {
             position: "insideLeft",
           }}
         />
-        <Tooltip itemSorter={(item) => -item.value} />
+        <Tooltip itemSorter={(item) => item.value} />
         <Legend />
         {assets.map((asset, index) => (
           <Bar stackId="a" dataKey={asset} fill={COLORS[index % COLORS.length]}>
-            <LabelList dataKey="total" position="top" />
+            {(index+1 === assets.length) && <LabelList dataKey="total" position="top" />}
           </Bar>
         ))}
       </BarChart>
