@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./PortfolioSnapshot.css";
 import Piechart from "../portfolio-charts/Piechart";
+import { addPortfolioSnapshot } from "./portfolioSnapshotSlice";
+import { useDispatch, useSelector } from "react-redux";
 const defaultInvestment = {
   asset: "",
   investmentType: "",
@@ -8,17 +10,19 @@ const defaultInvestment = {
   remark: "",
 };
 function PortfolioSnapShot() {
-  const [investments, setInvestments] = useState([defaultInvestment]);
+  const portfolios = useSelector((store) => store.portfolioSnapshots);
+  const [investments, setInvestments] = useState([...portfolios[0].investments]);
   const [meta, setMeta] = useState([]);
+  const dispatch = useDispatch();
 
   function isValid(investment) {
     return investment.asset && investment.amount;
   }
   const handleInputChange = (e, index) => {
     investments[index] = {
-        ...investments[index],
-        [e.target.name]: e.target.value
-    }
+      ...investments[index],
+      [e.target.name]: e.target.value
+    };
     setInvestments([...investments]);
     calculateMeta();
   };
@@ -26,36 +30,48 @@ function PortfolioSnapShot() {
     const meta = {};
     let total = 0;
     let isMetaValid = true;
-    
+
     investments.forEach((investment) => {
-        if(!isValid(investment)) {
-            isMetaValid = false;
-            return;
-        }
-        if(!meta[investment.asset]) {
-            meta[investment.asset] = {
-                asset: investment.asset,
-                amount: 0,
-                percentage: 0
-            }
-        }
-        total += investment.amount;
-        meta[investment.asset].amount += Number(investment.amount);
-    })
-    if(isMetaValid) {
-        Object.entries(meta).forEach(([asset, metadata]) => {
-            meta[asset].percentage = Number((meta[asset].amount*100/total).toFixed(2));
-        })
-        setMeta(Object.values(meta));
+      if (!isValid(investment)) {
+        isMetaValid = false;
+        return;
+      }
+      if (!meta[investment.asset]) {
+        meta[investment.asset] = {
+          asset: investment.asset,
+          amount: 0,
+          percentage: 0,
+        };
+      }
+      total += Number(investment.amount);
+      meta[investment.asset].amount += Number(investment.amount);
+    });
+    if (isMetaValid) {
+      Object.entries(meta).forEach(([asset, metadata]) => {
+        meta[asset].percentage = Number(
+          ((meta[asset].amount * 100) / total).toFixed(2)
+        );
+      });
+      setMeta(Object.values(meta));
     }
-  }
+  };
   const addInvestmentRow = () => {
     setInvestments([...investments, defaultInvestment]);
   };
   const submitPortfolio = (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(Object.fromEntries(formData.entries()), investments)
+    const data = Object.fromEntries(formData.entries());
+    dispatch(
+      addPortfolioSnapshot({
+        portfolioSnapshot: {
+          date: data.date,
+          investments,
+        },
+      })
+    );
+    e.currentTarget.reset();
+    setInvestments([defaultInvestment]);
   };
   return (
     <div className="protfolio-snapshot">
@@ -92,7 +108,7 @@ function PortfolioSnapShot() {
                     ></input>
                   </div>
                   <div>
-                    <label>Amount</label>
+                    <label>Amount(in K)</label>
                     <input
                       className="form-control"
                       type="number"

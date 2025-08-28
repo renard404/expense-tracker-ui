@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import PortfolioSnapShot from "./portfolio-snapshot/PortfolioSnapshot";
+import PortfolioStats from "./portfolio-stats/PortfolioStats";
 
 function Portfolio() {
   return (
@@ -8,7 +9,7 @@ function Portfolio() {
             Portfolio component here
             <Routes>
               <Route path="add" element={<PortfolioSnapShot/>}></Route>
-              {/* <Route path="list" element={<PortfolioList/>}></Route> */}
+              <Route path="stats" element={<PortfolioStats/>}></Route>
             </Routes>
         </div>
     </div>

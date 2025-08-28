@@ -44,7 +44,7 @@ const defaultSidebar = [
     toggle: false,
     options: [
       {
-        id: "list",
+        id: "stats",
         title: "All Portfolios",
         isActive: false,
       },

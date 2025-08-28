@@ -5,6 +5,56 @@
 .clickable {
   cursor: pointer;
 }
+
+.form-content {
+  left: 25%;
+  width: 30%;
+  min-width: 400px;
+  margin-top: 40px;
+  max-height: 80vh;
+  padding: 20px;
+  box-shadow: 0 0 15px #888888;
+  overflow: auto;
+  .form-control {
+    margin-bottom: 20px;
+
+    label {
+      font-weight: bold;
+      color: gray;
+      display: block;
+    }
+
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  &.width-50 {
+    width: 50%;
+    left: 20%;
+  }
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-options {
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  label {
+    font-weight: bold;
+    color: gray;
+    display: flex;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
